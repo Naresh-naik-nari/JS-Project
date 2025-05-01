@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Documents | CareerConnect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS Variables for easy theming */
+        :root {
+            --primary-color: #2c7be5;
+            --primary-hover: #1a68d1;
+            --secondary-color: #4e73df;
+            --success-color: #00a854;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #6c757d;
+            --text-color: #333;
+            --text-light: #777;
+            --white: #ffffff;
+            --border-radius: 0.375rem;
+            --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --transition: all 0.3s ease;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+        }
+
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: var(--medium-gray);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--light-gray);
+        }
+
+        .btn-icon {
+            width: 2rem;
+            height: 2rem;
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0.75rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo a {
+            color: var(--primary-color);
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-list {
+            display: flex;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--white);
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .nav-item:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-color);
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        /* Documents Section */
+        .documents-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .documents-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(44, 123, 229, 0.25);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+
+        /* Documents Table */
+        .documents-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .documents-table th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            background-color: var(--light-gray);
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .documents-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--medium-gray);
+            vertical-align: middle;
+        }
+
+        .document-item:hover {
+            background-color: rgba(44, 123, 229, 0.05);
+        }
+
+        .document-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: rgba(44, 123, 229, 0.1);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            margin-right: 1rem;
+        }
+
+        .document-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .document-meta {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .document-type {
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .type-resume {
+            background-color: rgba(0, 168, 84, 0.1);
+            color: var(--success-color);
+        }
+
+        .type-cover-letter {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+
+        .type-portfolio {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .type-reference {
+            background-color: rgba(78, 115, 223, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .type-certification {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--dark-gray);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .pagination-info {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .page-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        .page-btn:hover:not(.active) {
+            background-color: var(--medium-gray);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--medium-gray);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .nav-item {
+                margin: 0 0.5rem;
+            }
+            
+            .search-box {
+                max-width: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav {
+                position: fixed;
+                top: 4.5rem;
+                left: 0;
+                width: 100%;
+                background-color: var(--white);
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav.active {
+                transform: translateY(0);
+            }
+
+            .nav-list {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-item {
+                width: 100%;
+                margin: 0;
+                border-bottom: 1px solid var(--medium-gray);
+            }
+
+            .nav-link {
+                padding: 1rem 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                display: none;
+                width: 100%;
+                padding-left: 1rem;
+                background-color: var(--light-gray);
+                border-radius: 0;
+            }
+
+            .dropdown-active .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-item {
+                padding: 0.75rem 0;
+            }
+
+            /* Documents responsive */
+            .documents-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .search-filter {
+                width: 100%;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .documents-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 376px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .document-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .document-icon {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container flex-between">
+            <div class="logo">
+                <a href="#">Career<span></span></a>
+                <a href="#">Connect<span></span></a>
+            </div>
+
+            <nav class="nav" id="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Home</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./home-1.html" class="dropdown-item">Home-1</a></li>
+                            <li><a href="./home-2.html" class="dropdown-item">Home-2</a></li>
+                            <li><a href="./home-3.html" class="dropdown-item">Home-3</a></li>
+                            <li><a href="./home-4.html" class="dropdown-item">Home-4</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Jobs</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./api.html" class="dropdown-item">Finance</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Technology</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Design</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Healthcare</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Marketing</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Employers</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./Document.html" class="dropdown-item">Employer Listings</a></li>
+                            <li><a href="./career.html" class="dropdown-item">Employer Details</a></li>
+                            <li><a href="./Edite1.html" class="dropdown-item">Post a Job</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Pages</i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./master.html" class="dropdown-item">About Us</a></li>
+                            <li><a href="./master.html" class="dropdown-item">Contact</a></li>
+                            <li><a href="./master.html" class="dropdown-item">FAQ</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Candidates</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./career.html" class="dropdown-item">Browse Candidates</a></li>
+                            <li><a href="./Document.html" class="dropdown-item">Candidate Profiles</a></li>
+                            <li><a href="./resume.html" class="dropdown-item">Submit Resume</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header flex-between">
+            <h1 class="page-title">My Documents</h1>
+            <button class="btn btn-primary" id="upload-btn">
+                <i class="fas fa-plus"></i><a href="./resume.html">Upload Document</a>
+            </button>
+        </div>
+
+        <div class="card">
+            <div class="documents-header flex-between">
+                <h2 class="documents-title">All Documents</h2>
+                <div class="search-filter flex-center gap-2">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search documents..." id="search-input">
+                    </div>
+                    <button class="btn btn-outline" id="filter-btn">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="documents-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documents-list">
+                        <tr class="document-item">
+                            <td>
+                                <div class="document-info flex-center">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div>
+                                        <div class="document-name">Resume_John_Doe.pdf</div>
+                                        <div class="document-meta">12.5 MB</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="document-type type-resume">Resume</span>
+                            </td>
+                            <td>
+                                <div class="document-meta">May 15, 2023</div>
+                            </td>
+                            <td>
+                                <div class="document-actions flex-center gap-1">
+                                    <button class="btn btn-icon btn-outline" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Share">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="document-item">
+                            <td>
+                                <div class="document-info flex-center">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-word"></i>
+                                    </div>
+                                    <div>
+                                        <div class="document-name">Cover_Letter_Software_Engineer.docx</div>
+                                        <div class="document-meta">8.2 MB</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="document-type type-cover-letter">Cover Letter</span>
+                            </td>
+                            <td>
+                                <div class="document-meta">April 28, 2023</div>
+                            </td>
+                            <td>
+                                <div class="document-actions flex-center gap-1">
+                                    <button class="btn btn-icon btn-outline" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Share">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="document-item">
+                            <td>
+                                <div class="document-info flex-center">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div>
+                                        <div class="document-name">Portfolio_2023.pdf</div>
+                                        <div class="document-meta">24.7 MB</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="document-type type-portfolio">Portfolio</span>
+                            </td>
+                            <td>
+                                <div class="document-meta">March 10, 2023</div>
+                            </td>
+                            <td>
+                                <div class="document-actions flex-center gap-1">
+                                    <button class="btn btn-icon btn-outline" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Share">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="document-item">
+                            <td>
+                                <div class="document-info flex-center">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-excel"></i>
+                                    </div>
+                                    <div>
+                                        <div class="document-name">Project_List.xlsx</div>
+                                        <div class="document-meta">5.1 MB</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="document-type type-reference">Reference</span>
+                            </td>
+                            <td>
+                                <div class="document-meta">February 22, 2023</div>
+                            </td>
+                            <td>
+                                <div class="document-actions flex-center gap-1">
+                                    <button class="btn btn-icon btn-outline" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Share">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="document-item">
+                            <td>
+                                <div class="document-info flex-center">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div>
+                                        <div class="document-name">Certification_React.pdf</div>
+                                        <div class="document-meta">3.8 MB</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="document-type type-certification">Certification</span>
+                            </td>
+                            <td>
+                                <div class="document-meta">January 5, 2023</div>
+                            </td>
+                            <td>
+                                <div class="document-actions flex-center gap-1">
+                                    <button class="btn btn-icon btn-outline" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Share">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                    <button class="btn btn-icon btn-outline" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination flex-between">
+                <div class="pagination-info">Showing 1 to 5 of 12 documents</div>
+                <div class="pagination-controls flex-center gap-1">
+                    <button class="page-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                this.querySelector('i').classList.toggle('fa-bars');
+                this.querySelector('i').classList.toggle('fa-times');
+            });
+            
+            // Mobile dropdown handling
+            navItems.forEach(item => {
+                const link = item.querySelector('.nav-link');
+                
+                if (link) {
+                    link.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768) {
+                            const dropdown = item.querySelector('.dropdown-menu');
+                            if (dropdown) {
+                                e.preventDefault();
+                                item.classList.toggle('dropdown-active');
+                                
+                                // Close other dropdowns
+                                navItems.forEach(otherItem => {
+                                    if (otherItem !== item && otherItem.classList.contains('dropdown-active')) {
+                                        otherItem.classList.remove('dropdown-active');
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.nav') && 
+                    !e.target.closest('.menu-toggle') && 
+                    mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                    menuToggle.querySelector('i').classList.add('fa-bars');
+                    menuToggle.querySelector('i').classList.remove('fa-times');
+                }
+            });
+            
+            // Reset on resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    mainNav.classList.remove('active');
+                    menuToggle.querySelector('i').classList.add('fa-bars');
+                    menuToggle.querySelector('i').classList.remove('fa-times');
+                    navItems.forEach(item => {
+                        item.classList.remove('dropdown-active');
+                    });
+                }
+            });
+            
+            // Document management functionality
+            const uploadBtn = document.getElementById('upload-btn');
+            const searchInput = document.getElementById('search-input');
+            const filterBtn = document.getElementById('filter-btn');
+            const documentsList = document.getElementById('documents-list');
+            const pageBtns = document.querySelectorAll('.page-btn:not(.active)');
+            
+            // Upload document
+            uploadBtn.addEventListener('click', function() {
+                // In a real app, this would open a file upload dialog
+                alert('File upload appear here');
+                
+                // Example of adding a new document
+                
+                const newDocument = `
+                    <tr class="document-item">
+                        <td>
+                            <div class="document-info flex-center">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <div class="document-name">New_Resume.pdf</div>
+                                    <div class="document-meta">10.2 MB</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="document-type type-resume">Resume</span>
+                        </td>
+                        <td>
+                            <div class="document-meta">${new Date().toLocaleDateString()}</div>
+                        </td>
+                        <td>
+                            <div class="document-actions flex-center gap-1">
+                                <button class="btn btn-icon btn-outline" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn btn-icon btn-outline" title="Share">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <button class="btn btn-icon btn-outline" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                documentsList.insertAdjacentHTML('afterbegin', newDocument);
+                updatePaginationInfo();
+            
+            });
+            
+            // Search documents
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = documentsList.querySelectorAll('.document-item');
+                
+                rows.forEach(row => {
+                    const docName = row.querySelector('.document-name').textContent.toLowerCase();
+                    row.style.display = docName.includes(searchTerm) ? '' : 'none';
+                });
+                
+                updatePaginationInfo();
+            });
+            
+            // Filter documents
+            filterBtn.addEventListener('click', function() {
+                alert('Filter options would appear here');
+            });
+            
+            // Document actions
+            documentsList.addEventListener('click', function(e) {
+                const target = e.target.closest('button');
+                if (!target) return;
+                
+                const actionIcon = target.querySelector('i');
+                if (!actionIcon) return;
+                
+                const row = target.closest('.document-item');
+                
+                if (actionIcon.classList.contains('fa-download')) {
+                    alert('Downloading document...');
+                } else if (actionIcon.classList.contains('fa-share-alt')) {
+                    alert('Share dialog would appear here');
+                } else if (actionIcon.classList.contains('fa-trash')) {
+                    if (confirm('Are you sure you want to delete this document?')) {
+                        row.style.opacity = '0';
+                        setTimeout(() => {
+                            row.remove();
+                            updatePaginationInfo();
+                        }, 300);
+                    }
+                }
+            });
+            
+            // Pagination
+            pageBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelector('.page-btn.active').classList.remove('active');
+                    this.classList.add('active');
+                    updatePaginationInfo();
+                });
+            });
+            
+            // Update pagination info
+            function updatePaginationInfo() {
+                const visibleRows = documentsList.querySelectorAll('.document-item:not([style*="none"])').length;
+                const totalRows = documentsList.querySelectorAll('.document-item').length;
+                const currentPage = parseInt(document.querySelector('.page-btn.active').textContent) || 1;
+                const perPage = 5;
+                
+                const start = (currentPage - 1) * perPage + 1;
+                const end = Math.min(currentPage * perPage, totalRows);
+                
+                document.querySelector('.pagination-info').textContent = 
+                    `Showing ${start} to ${end} of ${totalRows} documents`;
+            }
+        });
+    </script>
+</body>
+</html>

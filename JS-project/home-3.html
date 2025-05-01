@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobConnect - Find Your Dream Career</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #2563eb;
+            color: #2563eb;
+        }
+
+        .btn-outline:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        /* Header Styles */
+        .header {
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .subheader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: lime;
+        }
+
+        .logo span {
+            color: blue;
+        }
+
+        .navbar {
+            transition: all 0.4s ease;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 10px;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #2563eb;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .nav-item:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            display: block;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger .bar {
+            height: 3px;
+            width: 100%;
+            background-color: #333;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background-color: white;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                padding: 70px 20px 20px;
+                overflow-y: auto;
+            }
+
+            .navbar.active {
+                left: 0;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                gap: 0;
+                width: 100%;
+            }
+
+            .nav-item {
+                width: 100%;
+                border-bottom: 1px solid #eee;
+            }
+
+            .nav-link {
+                padding: 12px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .nav-link::after {
+                content: "+";
+                font-size: 1.2rem;
+                transition: transform 0.3s ease;
+            }
+
+            .nav-item.active .nav-link::after {
+                content: "-";
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                background: transparent;
+                padding-left: 15px;
+                display: block;
+                visibility: hidden;
+            }
+
+            .nav-item.active .dropdown-menu {
+                max-height: 500px;
+                visibility: visible;
+            }
+
+            .dropdown-item {
+                padding: 8px 0;
+                color: #666;
+            }
+
+            .dropdown-item:hover {
+                background: transparent;
+                color: #2563eb;
+            }
+
+            .overlay.active {
+                display: block;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/600') center/cover;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Search Form */
+        .search-form {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: -3rem;
+            position: relative;
+        }
+
+        .search-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .search-group input,
+        .search-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        /* Category Section */
+        .categories {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .category-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .category-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Featured Jobs */
+        .featured-jobs {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .job-card {
+            border: 1px solid var(--light-gray);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .job-card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .job-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .job-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 0.375rem;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            overflow: hidden;
+        }
+
+        .job-title h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .job-company {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .job-details {
+            margin: 1rem 0;
+        }
+
+        .job-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-info {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .view-more {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 5rem 0;
+        }
+
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step h3 {
+            margin-bottom: 1rem;
+        }
+
+        .step p {
+            color: var(--gray);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .testimonial-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .testimonial {
+            flex: 0 0 100%;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 0.5rem;
+            background-color: var(--light);
+            margin: 1rem;
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+            background-color: var(--light-gray);
+        }
+
+        .author-info h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .slider-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin: 0 0.5rem;
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .slider-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            padding: 5rem 0;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .newsletter h2 {
+            margin-bottom: 1rem;
+        }
+
+        .newsletter p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 0.375rem 0 0 0.375rem;
+            font-size: 1rem;
+        }
+
+        .newsletter-form button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background-color: #0ca678;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo span {
+            color: var(--secondary);
+        }
+
+        .footer-about {
+            max-width: 300px;
+        }
+
+        .footer-about p {
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary);
+        }
+
+        .footer-links h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-item {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .search-form {
+                padding: 1rem;
+            }
+
+            .search-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .search-group {
+                min-width: 100%;
+            }
+
+            .steps {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-form input {
+                border-radius: 0.375rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .newsletter-form button {
+                border-radius: 0.375rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="subheader container">
+            <a href="#" class="logo">Career<span>Connect</span></a>
+            <div class="hamburger" id="hamburger-btn">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+
+            <nav class="navbar" id="navbar">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link dropdown-toggle">Home</a>
+                        <div class="dropdown-menu">
+                            <a href="./home-1.html" class="dropdown-item">Home-1</a>
+                            <a href="./home-2.html" class="dropdown-item">Home-2</a>
+                            <a href="./home-3.html" class="dropdown-item">Home-3</a>
+                            <a href="./master.html" class="dropdown-item">Home-4</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link dropdown-toggle">Jobs</a>
+                        <div class="dropdown-menu">
+                            <a href="./api.html" class="dropdown-item">Technology</a>
+                            <a href="./api.html" class="dropdown-item">Finance</a>
+                            <a href="./api.html" class="dropdown-item">Design</a>
+                            <a href="./api.html" class="dropdown-item">Healthcare</a>
+                            <a href="./api.html" class="dropdown-item">Marketing</a>
+                            <a href="./api.html" class="dropdown-item">Construction</a>
+                            <a href="./api.html" class="dropdown-item">Hospitality</a>
+                            <a href="./api.html" class="dropdown-item">Education</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link dropdown-toggle">Employers</a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">Employer Listings</a>
+                            <a href="./Document.html" class="dropdown-item">Employer Details</a>
+                            <a href="./api.html" class="dropdown-item">Post a Job</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link dropdown-toggle">Pages</a>
+                        <div class="dropdown-menu">
+                            <a href="./master.html" class="dropdown-item">About Us</a>
+                            <a href="./master.html" class="dropdown-item">Contact</a>
+                            <a href="./master.html" class="dropdown-item">FAQ</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link dropdown-toggle">Candidates</a>
+                        <div class="dropdown-menu">
+                            <a href="./career.html" class="dropdown-item">Browse Candidates</a>
+                            <a href="./Document.html" class="dropdown-item">Candidate Profiles</a>
+                            <a href="./resume.html" class="dropdown-item">Submit Resume</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="overlay" id="overlay"></div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Find Your Dream Job Today</h1>
+            <p>Browse thousands of job listings and find the perfect opportunity for your career growth. Connect with
+                top employers and take your career to the next level.</p>
+            <a href="#jobs" class="btn btn-primary">Explore Jobs</a>
+        </div>
+    </section>
+
+    <!-- Search Form -->
+    <div class="container">
+        <div class="search-form">
+            <form>
+                <div class="search-row">
+                    <div class="search-group">
+                        <label for="keyword">What</label>
+                        <input type="text" id="keyword" placeholder="Job title, keywords, or company">
+                    </div>
+                    <div class="search-group">
+                        <label for="location">Where</label>
+                        <input type="text" id="location" placeholder="City, state, or remote">
+                    </div>
+                    <div class="search-group">
+                        <label for="category">Category</label>
+                        <select id="category">
+                            <option value="">All Categories</option>
+                            <option value="tech">Technology</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="design">Design</option>
+                            <option value="finance">Finance</option>
+                            <option value="healthcare">Healthcare</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="search-btn">
+                    <button type="submit" class="btn btn-primary">Search Jobs</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <div class="section-header">
+                <h2>Popular Job Categories</h2>
+                <p>Explore the most in-demand job categories and find the perfect role for your skills and aspirations.
+                </p>
+            </div>
+            <div class="category-grid">
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <h3>Technology</h3>
+                    <p>245 Jobs Available</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z">
+                            </path>
+                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                    </div>
+                    <h3>Marketing</h3>
+                    <p>157 Jobs Available</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Design</h3>
+                    <p>103 Jobs Available</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <h3>Finance</h3>
+                    <p>192 Jobs Available</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <h3>Healthcare</h3>
+                    <p>213 Jobs Available</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Education</h3>
+                    <p>126 Jobs Available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Jobs -->
+    <section class="featured-jobs" id="jobs">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Jobs</h2>
+                <p>Browse through our selection of top job opportunities from leading companies across various
+                    industries.</p>
+            </div>
+            <div class="jobs-grid">
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div class="job-title">
+                            <h3>Senior Frontend Developer</h3>
+                            <div class="job-company">TechCorp</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <span class="job-tag">Full-time</span>
+                        <span class="job-tag">Remote</span>
+                        <span class="job-tag">JavaScript</span>
+                        <span class="job-tag">React</span>
+                    </div>
+                    <div class="job-info">
+                        <div class="job-location">San Francisco, CA</div>
+                        <div class="job-salary">$120K - $150K</div>
+                    </div>
+                    <a href="#" class="btn btn-outline">Apply Now</a>
+                </div>
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z">
+                                </path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                        </div>
+                        <div class="job-title">
+                            <h3>Digital Marketing Manager</h3>
+                            <div class="job-company">MarketPro</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <span class="job-tag">Full-time</span>
+                        <span class="job-tag">Hybrid</span>
+                        <span class="job-tag">SEO</span>
+                        <span class="job-tag">SEM</span>
+                    </div>
+                    <div class="job-info">
+                        <div class="job-location">New York, NY</div>
+                        <div class="job-salary">$90K - $110K</div>
+                    </div>
+                    <a href="#" class="btn btn-outline">Apply Now</a>
+                </div>
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                <path d="M2 2l7.586 7.586"></path>
+                                <circle cx="11" cy="11" r="2"></circle>
+                            </svg>
+                        </div>
+                        <div class="job-title">
+                            <h3>UX/UI Designer</h3>
+                            <div class="job-company">DesignWave</div>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <span class="job-tag">Full-time</span>
+                        <span class="job-tag">On-site</span>
+                        <span class="job-tag">Figma</span>
+                        <span class="job-tag">Adobe XD</span>
+                    </div>
+                    <div class="job-info">
+                        <div class="job-location">New York, NY</div>
+                        <div class="job-salary">$90K - $110K</div>
+                    </div>
+                    <a href="#" class="btn btn-outline">Apply Now</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Navigation Toggle
+            const hamburger = document.getElementById('hamburger-btn');
+            const navbar = document.getElementById('navbar');
+            const overlay = document.getElementById('overlay');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // Toggle mobile menu
+            hamburger.addEventListener('click', function () {
+                hamburger.classList.toggle('active');
+                navbar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = navbar.classList.contains('active') ? 'hidden' : 'auto';
+            });
+
+            // Close mobile menu when clicking on overlay
+            overlay.addEventListener('click', function () {
+                hamburger.classList.remove('active');
+                navbar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+
+                // Close all dropdowns when closing menu
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+            });
+
+            // Handle dropdown menus in mobile view
+            navItems.forEach(item => {
+                const toggle = item.querySelector('.nav-link');
+
+                toggle.addEventListener('click', function (e) {
+                    // Only prevent default in mobile view
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        item.classList.toggle('active');
+
+                        // Close other dropdowns when opening a new one
+                        navItems.forEach(otherItem => {
+                            if (otherItem !== item) {
+                                otherItem.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Close mobile menu when clicking a link (optional)
+            document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-item').forEach(link => {
+                link.addEventListener('click', function () {
+                    if (window.innerWidth <= 768) {
+                        hamburger.classList.remove('active');
+                        navbar.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            });
+
+            // Close mobile menu when window is resized above mobile breakpoint
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768) {
+                    hamburger.classList.remove('active');
+                    navbar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+
+                    // Reset dropdown states
+                    navItems.forEach(item => {
+                        item.classList.remove('active');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

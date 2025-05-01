@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: dimgray;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            opacity: 0.8;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+
+        button {
+            width: 50%;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-google img {
+            width: 20px;
+            margin: 10px;
+        }
+
+        .btn-google:hover {
+            background-color: #C7D9DD;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Signup For Free</h2>
+        <form id="registrationForm" method="POST">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" onfocus="showHint('name')" onblur="validateName()" autocomplete="off" required>
+            <div class="error" id="nameError"></div>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" onfocus="showHint('email')" onblur="validateEmail()" autocomplete="off" required>
+            <div class="error" id="emailError"></div>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" onfocus="showHint('password')" onblur="validatePassword()"
+                autocomplete="new-password" required>
+            <div class="error" id="passwordError"></div>
+
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" onblur="validateConfirmPassword()" required>
+            <div class="error" id="confirmPasswordError"></div>
+
+            <div class="googles mt-3 text-center">
+                <button type="button" class="btn btn-google w-75" id="googlelogin">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                    Sign Up with Google
+                </button>
+            </div>
+            <div class="text-center">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- <script>
+        // Client-side validation functions
+        function showHint(field) {
+            const hints = {
+                'name': 'Enter your full name',
+                'email': 'Enter a valid email address',
+                'password': 'Password must be at least 6 characters'
+            };
+            document.getElementById(field + 'Error').textContent = hints[field] || '';
+            document.getElementById(field + 'Error').style.color = 'blue';
+        }
+
+        function validateName() {
+            const name = document.getElementById('name').value.trim();
+            const errorElement = document.getElementById('nameError');
+
+            if (name.length < 3) {
+                errorElement.textContent = 'Name must be at least 3 characters';
+                errorElement.style.color = 'red';
+                return false;
+            }
+            errorElement.textContent = '';
+            return true;
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const errorElement = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(email)) {
+                errorElement.textContent = 'Please enter a valid email address';
+                errorElement.style.color = 'red';
+                return false;
+            }
+            errorElement.textContent = '';
+            return true;
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('passwordError');
+
+            if (password.length < 6) {
+                errorElement.textContent = 'Password must be at least 6 characters';
+                errorElement.style.color = 'red';
+                return false;
+            }
+            errorElement.textContent = '';
+            return true;
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('confirmPasswordError');
+
+            if (password !== confirmPassword) {
+                errorElement.textContent = 'Passwords do not match';
+                errorElement.style.color = 'red';
+                return false;
+            }
+            errorElement.textContent = '';
+            return true;
+        }
+
+        function validateForm() {
+            const isValid = validateName() &&
+                validateEmail() &&
+                validatePassword() &&
+                validateConfirmPassword();
+            
+            if (!isValid) {
+                alert('Please fix the errors in the form before submitting.');
+                return false;
+            }
+            return true;
+        }
+
+        // Add form submission handler
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+    </script> -->
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-MNLd1MQenjpVst6bI9Hq_nV1sODp_UM",
+            authDomain: "grand-login-598e3.firebaseapp.com",
+            projectId: "grand-login-598e3",
+            storageBucket: "grand-login-598e3.firebasestorage.app",
+            messagingSenderId: "347132665338",
+            appId: "1:347132665338:web:71d9abddf8ad3158f49843",
+            measurementId: "G-VV2CTSPGYG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("registrationForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                if (!validateForm()) {
+                    return;
+                }
+
+                const name = document.getElementById("name").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    await setDoc(doc(db, "users", user.uid), {
+                        name: name,
+                        email: email,
+                        uid: user.uid
+                    });
+
+                    alert("Account created successfully! Redirecting to login page...");
+                    window.location.href = "login.html";
+                } catch (error) {
+                    alert("Error: " + error.message);
+                }
+            });
+
+            document.getElementById("googlelogin").addEventListener("click", async function () {
+                try {
+                    const result = await signInWithPopup(auth, provider);
+                    const user = result.user;
+
+                    await setDoc(doc(db, "users", user.uid), {
+                        name: user.displayName || "",
+                        email: user.email,
+                        uid: user.uid
+                    }, { merge: true });
+
+                    alert("Signed up successfully with Google! Redirecting...");
+                    window.location.href = "login.html";
+                } catch (error) {
+                    alert("Error: " + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

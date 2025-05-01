@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobLeads - Career Advice</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+            position: relative;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-around;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding: 15px 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo a {
+            color: #4CAF50;
+        }
+
+        .logo span {
+            color: #2196F3;
+        }
+
+        /* Navigation Styles */
+        .nav {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .nav-list {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            margin: 0 15px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 5px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #2196F3;
+        }
+
+        /* Dropdown Styles */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #fff;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 100;
+            border-radius: 4px;
+        }
+
+        .nav-item:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 10px 15px;
+            transition: background 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+            color: #2196F3;
+        }
+
+        /* Button Styles */
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .btn-login {
+            background: transparent;
+            border: 1px solid #2196F3;
+            color: #2196F3;
+            margin-right: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #2196F3;
+            color: #fff;
+        }
+
+        .btn-register {
+            background-color: #2196F3;
+            color: #fff;
+            border: 1px solid #2196F3;
+        }
+
+        .btn-register:hover {
+            background-color: #0b7dda;
+        }
+
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            margin-left: 15px;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 992px) {
+            .nav-item {
+                margin: 0 8px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                flex-direction: column;
+                display: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                z-index: 100;
+            }
+
+            .nav.active {
+                display: flex;
+            }
+
+            .nav-list {
+                flex-direction: column;
+                width: 100%;
+                margin: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+                margin: 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .nav-link {
+                padding: 15px;
+            }
+
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                display: none;
+                width: 100%;
+                padding-left: 20px;
+                background-color: #f9f9f9;
+            }
+
+            .dropdown-active .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-indicator {
+                float: right;
+            }
+
+            /* Auth buttons remain outside the menu */
+            .mobile-header-controls {
+                display: flex;
+                align-items: center;
+            }
+
+            .auth-buttons .btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+
+            .auth-buttons .btn {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 86, 179, 0.9), rgba(0, 86, 179, 0.8)), url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+            color: #fff;
+            padding: 150px 0 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 30px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: #0056b3;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* Categories Section */
+        .categories {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .category-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-image {
+            height: 180px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .category-card:hover .category-image img {
+            transform: scale(1.05);
+        }
+
+        .category-content {
+            padding: 20px;
+        }
+
+        .category-content h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .category-content p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #2196F3;
+            color: white;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0b7dda;
+        }
+
+        /* Featured Articles */
+        .featured-articles {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .article-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-image {
+            height: 200px;
+            background-color: #ddd;
+            overflow: hidden;
+        }
+
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .article-card:hover .article-image img {
+            transform: scale(1.05);
+        }
+
+        .article-content {
+            padding: 20px;
+        }
+
+        .article-content h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+
+        .article-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .article-meta span {
+            margin-right: 15px;
+        }
+
+        .article-content p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .newsletter h2 {
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .newsletter p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .newsletter-form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+
+        .newsletter-form button {
+            padding: 15px 30px;
+            background-color: #003d7a;
+            color: #fff;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background-color: #002d5a;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #ccc;
+            transition: color 0.3s;
+            font-size: 14px;
+        }
+
+        .footer-column ul li a:hover {
+            color: #fff;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #2196F3;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #ccc;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="#">Career<span>Connect</span></a>
+            </div>
+
+            <div class="nav" id="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Home</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./home-1.html" class="dropdown-item">Home-1</a></li>
+                            <li><a href="./home-2.html" class="dropdown-item">Home-2</a></li>
+                            <li><a href="./home-3.html" class="dropdown-item">Home-3</a></li>
+                            <li><a href="./home-4.html" class="dropdown-item">Home-4</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Jobs Categories</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./api.html" class="dropdown-item">Technology</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Finance</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Design</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Healthcare</a></li>
+                            <li><a href="./api.html" class="dropdown-item">Marketing</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Pages </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./master.html" class="dropdown-item">About Us</a></li>
+                            <li><a href="./master.html" class="dropdown-item">Contact</a></li>
+                            <li><a href="./master.html" class="dropdown-item">FAQ</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Candidates </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./career.html" class="dropdown-item">Browse Candidates</a></li>
+                            <li><a href="./Document.html" class="dropdown-item">Candidate Profiles</a></li>
+                            <li><a href="./resume.html" class="dropdown-item">Submit Resume</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="mobile-header-controls">
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Expert Career Advice to Boost Your Professional Journey</h1>
+            <p>Discover insights, tips, and strategies to help you succeed in today's competitive job market. From resume writing to salary negotiation, we've got you covered.</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for career advice...">
+                <button>Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <div class="section-title">
+                <h2>Explore Career Advice Categories</h2>
+                <p>Find specific guidance for every stage of your professional development</p>
+            </div>
+            <div class="category-grid">
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Resume Writing">
+                    </div>
+                    <div class="category-content">
+                        <h3>Resume Writing</h3>
+                        <p>Craft a compelling resume that gets noticed by hiring managers. Learn how to highlight your achievements, optimize for ATS systems, and tailor your resume for different job applications.</p>
+                        <a href="#" class="btn">Explore 25+ Resources</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Interview Preparation">
+                    </div>
+                    <div class="category-content">
+                        <h3>Interview Preparation</h3>
+                        <p>Master the art of interviewing and make a lasting impression. Discover common interview questions, behavioral interview techniques, and how to follow up effectively after your interview.</p>
+                        <a href="#" class="btn">Explore 18+ Resources</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Job Search Strategies">
+                    </div>
+                    <div class="category-content">
+                        <h3>Job Search Strategies</h3>
+                        <p>Effective techniques to find and land your dream job. Learn networking strategies, how to use LinkedIn effectively, and unconventional job search methods that work.</p>
+                        <a href="#" class="btn">Explore 32+ Resources</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Career Development">
+                    </div>
+                    <div class="category-content">
+                        <h3>Career Development</h3>
+                        <p>Grow professionally and advance in your chosen field. Discover leadership skills, how to ask for promotions, continuing education options, and long-term career planning strategies.</p>
+                        <a href="#" class="btn">Explore 15+ Resources</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Articles -->
+    <section class="featured-articles">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Career Advice Articles</h2>
+                <p>Our latest insights to help you succeed professionally</p>
+            </div>
+            <div class="article-grid">
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Resume Tips">
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>April 2, 2025</span>
+                            <span>8 min read</span>
+                            <span>Expert Level</span>
+                        </div>
+                        <h3>10 Resume Mistakes That Are Costing You Job Interviews</h3>
+                        <p>Learn the common resume errors that hiring managers see and how to fix them for better results. We analyzed 500+ resumes to identify the most frequent mistakes professionals make.</p>
+                        <a href="#" class="btn">Read Full Article</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1573497491765-dccce02b29df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Interview Tips">
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>March 28, 2025</span>
+                            <span>6 min read</span>
+                            <span>Intermediate Level</span>
+                        </div>
+                        <h3>How to Answer the "Tell Me About Yourself" Interview Question</h3>
+                        <p>Master this common but challenging interview opener with our expert framework. Includes 5 sample answers tailored for different career stages and industries.</p>
+                        <a href="#" class="btn">Read Full Article</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Salary Negotiation">
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>March 25, 2025</span>
+                            <span>10 min read</span>
+                            <span>Advanced Level</span>
+                        </div>
+                        <h3>Salary Negotiation: How to Get the Pay You Deserve</h3>
+                        <p>Practical strategies for confidently discussing compensation and securing better offers. Learn scripts, timing strategies, and how to research your market value.</p>
+                        <a href="#" class="btn">Read Full Article</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>Get Career Advice Delivered to Your Inbox</h2>
+            <p>Join thousands of professionals who receive our weekly career tips, industry insights, and job search strategies. Subscribers get exclusive access to our premium content library.</p>
+            <div class="newsletter-form">
+                <input type="email" placeholder="Enter your email address">
+                <button type="submit">Subscribe</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CareerConnect</h3>
+                    <p>Your trusted partner for career guidance and professional development since 2015. We've helped over 250,000 professionals advance their careers.</p>
+                    <div class="social-links">
+                        <a href="#">F</a>
+                        <a href="#">T</a>
+                        <a href="#">L</a>
+                        <a href="#">I</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Career Resources</h3>
+                    <ul>
+                        <li><a href="#">Resume Templates</a></li>
+                        <li><a href="#">Cover Letter Examples</a></li>
+                        <li><a href="#">Interview Questions</a></li>
+                        <li><a href="#">Salary Guide</a></li>
+                        <li><a href="#">Career Assessment Tests</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>info@careerconnect.com</li>
+                        <li>1-800-CAREER-HELP</li>
+                        <li>123 Career Avenue, Suite 456<br>New York, NY 10001</li>
+                        <li>Monday-Friday: 9am-6pm EST</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 CareerConnect. All rights reserved. | Designed with ❤️ for professionals worldwide</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple JavaScript for mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // Toggle mobile menu
+            menuToggle.addEventListener('click', function () {
+                mainNav.classList.toggle('active');
+            });
+
+            // Handle dropdown on mobile
+            navItems.forEach(item => {
+                const link = item.querySelector('.nav-link');
+
+                link.addEventListener('click', function (e) {
+                    // Only for mobile view
+                    if (window.innerWidth <= 768) {
+                        if (item.querySelector('.dropdown-menu')) {
+                            e.preventDefault();
+                            item.classList.toggle('dropdown-active');
+
+                            // Close other open dropdowns
+                            navItems.forEach(otherItem => {
+                                if (otherItem !== item && otherItem.classList.contains('dropdown-active')) {
+                                    otherItem.classList.remove('dropdown-active');
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.nav') && !e.target.closest('.menu-toggle') && mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                }
+            });
+
+            // Reset on resize
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768) {
+                    mainNav.classList.remove('active');
+                    navItems.forEach(item => {
+                        item.classList.remove('dropdown-active');
+                    });
+                }
+            });
+        });
+
+
+        // Search Functionality
+        const searchBar = document.querySelector('.search-bar input');
+        const searchButton = document.querySelector('.search-bar button');
+
+        searchButton.addEventListener('click', () => {
+            if (searchBar.value.trim() !== '') {
+                alert('Searching for: ' + searchBar.value);
+                // In a real implementation, this would redirect to search results
+            }
+        });
+
+        // Newsletter Form Submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        const emailInput = document.querySelector('.newsletter-form input');
+
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (emailInput.value.trim() !== '') {
+                alert('Thank you for subscribing with: ' + emailInput.value);
+                emailInput.value = '';
+            }
+        });
+
+        // Scroll Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollElements = document.querySelectorAll('.category-card, .article-card');
+
+            const elementInView = (el, dividend = 1) => {
+                const elementTop = el.getBoundingClientRect().top;
+                return (
+                    elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+                );
+            };
+
+            const displayScrollElement = (element) => {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            };
+
+            const hideScrollElement = (element) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+            };
+
+            scrollElements.forEach((el) => {
+                hideScrollElement(el);
+            });
+
+            const handleScrollAnimation = () => {
+                scrollElements.forEach((el) => {
+                    if (elementInView(el, 1.25)) {
+                        displayScrollElement(el);
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', () => {
+                handleScrollAnimation();
+            });
+
+            // Initialize on page load
+            handleScrollAnimation();
+        });
+    </script>
+</body>
+
+</html>

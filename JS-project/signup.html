@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            background-size: cover;
+            background-attachment: fixed;
+           
+        }
+
+        .signup {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 4px 4px 5px 5px gray;
+            padding: 30px;
+            width: 100%;
+            text-align: center;
+            max-width: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .signup:hover,
+        .btn-google:hover,
+        .form-control:hover {
+            transform: scale(1.05);
+            transition: 0.5s ease;
+        }
+
+        .btn-success {
+            background-color: blue;
+            border: none;
+            color: white;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.1);
+            transition: 0.5s ease;
+            background-color: green;
+            color: white;
+        }
+
+        .btn-google,
+        .google {
+            border-radius: 10px;
+            color: #333;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-google img {
+            width: 20px;
+            margin-right: 8px;
+        }
+
+        .btn-google:hover {
+            background-color: #C7D9DD;
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: 8px;
+            border: 1px solid #C7D9DD;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup">
+        <div class="mb-4">
+            <h2>Sign Up</h2>
+        </div>
+        <form id="signupform">
+            <div class="mb-3">
+                <input type="text" id="signupusername" placeholder="First Name" required class="form-control">
+            </div>
+            <span id="userMessage"></span>
+            <div class="mb-3">
+                <input type="text" id="signupname" placeholder="Last Name" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="password" id="signuppassword" placeholder="Password" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="password" id="confirmpassword" placeholder="Confirm Password" required
+                    class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="email" id="signupemail" placeholder="Email" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="text" id="signupmobile" placeholder="Mobile" required class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success w-50">Create Account</button>
+        </form>
+        <div class="google text-center mt-3">
+            <button type="button" id="googleSignup" class="btn-google w-75">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                Sign Up with Google
+            </button>
+        </div>
+        <div class="text-center mt-3">
+            <span>Already have an account?</span> <a href="login.html">Log In</a>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_RXBlgOf8zGXHb9QrUiqqWJYHh1Kik5E",
+            authDomain: "grand-login-557be.firebaseapp.com",
+            projectId: "grand-login-557be",
+            storageBucket: "grand-login-557be.appspot.com",
+            messagingSenderId: "933505903069",
+            appId: "1:933505903069:web:6a4211c022ee5f5ca36e34"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("signupform").addEventListener("submit", async function (event) {
+                event.preventDefault();
+    
+                const username = document.getElementById("signupusername").value;
+                const name = document.getElementById("signupname").value;
+                const email = document.getElementById("signupemail").value;
+                const password = document.getElementById("signuppassword").value;
+                const confirmPassword = document.getElementById("confirmpassword").value;
+                const mobile = document.getElementById("signupmobile").value;
+    
+                if (password !== confirmPassword) {
+                    alert("Passwords do not match!");
+                    return;
+                }
+    
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+    
+                    await setDoc(doc(db, "users", user.uid), {
+                        username: username,
+                        name: name,
+                        email: email,
+                        mobile: mobile,
+                        uid: user.uid
+                    });
+    
+                    alert("Account created successfully! Redirecting to login page...");
+                    window.location.href = "login.html";
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+    
+            document.getElementById("googleSignup").addEventListener("click", async function () {
+                try {
+                    const result = await signInWithPopup(auth, provider);
+                    const user = result.user;
+    
+                    await setDoc(doc(db, "users", user.uid), {
+                        name: user.displayName || "",
+                        email: user.email,
+                        uid: user.uid
+                    }, { merge: true });
+    
+                    alert("Signed up successfully with Google! Redirecting...");
+                    window.location.href = "login.html";
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+        });
+    </script>
+    
+</body>
+
+</html>

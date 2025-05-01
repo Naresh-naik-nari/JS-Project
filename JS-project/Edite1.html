@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Posting System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            padding-bottom: 50px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            padding-top: 40px;
+            gap: 30px;
+            transition: 0.9s;
+        }
+
+        .container1 {
+            width: auto;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            opacity: 0.8;
+        }
+
+        input {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+
+        button {
+            width: 35%;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        .item:hover {
+            transform: scale(1.1);
+            transition: 0.6s ease;
+        }
+        .item {
+            text-align: center;
+            border: 1px solid gray;
+            border-radius: 20px;
+            box-shadow: 5px 5px 4px 2px gray;
+            overflow: hidden;
+            padding: 10px;
+            background: white;
+        }
+    
+        /* Loader Styles */
+        .loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            aspect-ratio: 2;
+            --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+            background:
+                var(--_g) 0% 50%,
+                var(--_g) 50% 50%,
+                var(--_g) 100% 50%;
+            background-size: calc(100%/3) 50%;
+            animation: l3 1s infinite linear;
+            display: none;
+        }
+
+        @keyframes l3 {
+            20% {
+                background-position: 0% 0%, 50% 50%, 100% 50%
+            }
+
+            40% {
+                background-position: 0% 100%, 50% 0%, 100% 50%
+            }
+
+            60% {
+                background-position: 0% 50%, 50% 100%, 100% 0%
+            }
+
+            80% {
+                background-position: 0% 50%, 50% 50%, 100% 100%
+            }
+        }
+        .button{
+            text-align: center;
+        }
+        .company{
+            color: blue;
+            font-weight: 100;
+        }
+        .title{
+            color: lightslategray;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container1">
+        <h2 class="text-center mb-4">Post Jobs</h2>
+        <form id="registrationForm">
+            <div class="class gap-4 d-flex flex-wrap align-item-center justify-content-center text-center p-2 m-4">
+                <input type="text" disabled placeholder="ID" id="id" class="rounded rounded-2">
+                <input type="text" placeholder="Company" id="company" class="rounded rounded-2" required>
+                <input type="text" placeholder="Title" id="title" class="rounded rounded-2" required>
+                <input type="text" placeholder="Location" id="location" class="rounded rounded-2" required>
+                <input type="text" placeholder="Description" id="description" class="rounded rounded-2" required>
+                <input type="text" placeholder="Salary" id="salary" class="rounded rounded-2" required>
+                <input type="text" placeholder="Experience" id="experience" class="rounded rounded-2" required>
+                <input type="text" placeholder="Skills" id="skills" class="rounded rounded-2" required>
+                <input type="text" placeholder="Employment Type" id="employmentType" class="rounded rounded-2" required>
+                <input type="text" placeholder="Category" id="category" class="rounded rounded-2" required>
+                <input type="text" placeholder="Apply Link" id="link" class="rounded rounded-2" required>
+                <input type="reset" class="btn btn-secondary">
+            </div>
+        </form>
+        <div class="button">
+            <button class="btn btn-success" id="btn">Save/Update</button>
+        </div>
+        <div class="loader" id="loader"></div>
+    </div>
+    
+    <script>
+        // Create container for job listings
+        let container = document.createElement("div");
+        container.className = "container";
+        document.body.appendChild(container);
+        
+        // API endpoint
+        let url = "https://sable-aware-polish.glitch.me/jobs";
+        
+        // Form elements
+        let titleInput = document.getElementById("title");
+        let companyInput = document.getElementById("company");
+        let categoryInput = document.getElementById("category");
+        let employmentTypeInput = document.getElementById("employmentType");
+        let skillsInput = document.getElementById("skills");
+        let experienceInput = document.getElementById("experience");
+        let salaryInput = document.getElementById("salary");
+        let locationInput = document.getElementById("location");
+        let linkInput = document.getElementById("link");
+        let descriptionInput = document.getElementById("description");
+        let idInput = document.getElementById("id");
+        let btn = document.getElementById("btn");
+        let loader = document.getElementById("loader");
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', getData);
+
+        // Save/Update button click handler
+        btn.addEventListener("click", async function (e) {
+            e.preventDefault();
+            
+            // Validate form
+            if (!titleInput.value || !companyInput.value || !descriptionInput.value || 
+                !categoryInput.value || !employmentTypeInput.value || !skillsInput.value || 
+                !experienceInput.value || !salaryInput.value || !locationInput.value || 
+                !linkInput.value) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            loader.style.display = 'block';
+            
+            try {
+                let method = idInput.value ? "PUT" : "POST";
+                let mainUrl = idInput.value ? `${url}/${idInput.value}` : url;
+                
+                let res = await fetch(mainUrl, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "title": titleInput.value,
+                        "company": companyInput.value,
+                        "description": descriptionInput.value,
+                        "category": categoryInput.value,
+                        "link": linkInput.value,
+                        "location": locationInput.value,
+                        "salary": salaryInput.value,
+                        "experience": experienceInput.value,
+                        "skills": skillsInput.value,
+                        "employmentType": employmentTypeInput.value
+                    })
+                });
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                getData();
+                alert(idInput.value ? "Data Updated" : "Data Added");
+                
+                // Reset form
+                idInput.value = '';
+                titleInput.value = '';
+                companyInput.value = '';
+                descriptionInput.value = '';
+                categoryInput.value = '';
+                employmentTypeInput.value = '';
+                skillsInput.value = '';
+                experienceInput.value = '';
+                salaryInput.value = '';
+                locationInput.value = '';
+                linkInput.value = '';
+                
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        // Fetch job data
+        async function getData() {
+            loader.style.display = 'block';
+            
+            try {
+                let res = await fetch(url);
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                let data = await res.json();
+                localStorage.setItem("jobs",JSON.stringify(data.jobs))
+                displayData(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                container.innerHTML = `<p class="text-center">Error loading data. Please try again later.</p>`;
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        // Display job data
+        function displayData(jobs) {
+            container.innerHTML = "";
+            
+            if (jobs.length === 0) {
+                container.innerHTML = `<p class="text-center">No jobs found. Add some jobs to get started.</p>`;
+                return;
+            }
+            
+            jobs.forEach(obj => {
+                let item = document.createElement("div");
+                item.className = "item";
+                item.innerHTML = `
+                    <p class='company'>${obj.company}</p>
+                    <p class='title'>${obj.title}</p>
+                    <p>Location: ${obj.location}</p>
+                    <p>Salary: ${obj.salary}</p>
+                    <p>Skills: ${obj.skills}
+                        <p>${obj.skills}</p>
+                    </p>
+                    <button onclick="deleteData('${obj.id}')" class='btn btn-danger'>Delete</button>
+                    <button onclick="updateData('${obj.id}')" class='btn btn-primary'>Update</button>
+                    <button onclick="moreData('${obj.id}')" class='btn btn-warning'>MoreData</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Update job data
+        async function updateData(id) {
+            loader.style.display = 'block';
+            
+            try {
+                let res = await fetch(`${url}/${id}`);
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                let obj = await res.json();
+                
+                idInput.value = obj.id;
+                titleInput.value = obj.title;
+                companyInput.value = obj.company;
+                categoryInput.value = obj.category;
+                employmentTypeInput.value = obj.employmentType;
+                skillsInput.value = obj.skills;
+                experienceInput.value = obj.experience;
+                salaryInput.value = obj.salary;
+                locationInput.value = obj.location;
+                linkInput.value = obj.link;
+                descriptionInput.value = obj.description;
+                
+                window.scroll({
+                    top: 0,
+                    behavior: "smooth"
+                });
+                
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error fetching job data");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        // Delete job data
+        async function deleteData(id) {
+            if (!confirm("Are you sure you want to delete this job?")) {
+                return;
+            }
+            
+            loader.style.display = 'block';
+            
+            try {
+                let res = await fetch(`${url}/${id}`, {
+                    method: "DELETE`"
+                });
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                getData();
+                alert("Job deleted successfully");
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error deleting job");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        // More data function
+        async function moreData(id) {
+            try {
+                if (!navigator.geolocation) {
+                    throw new Error("Geolocation is not supported by this browser.");
+                }
+
+                let position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                });
+
+                let latitude = position.coords.latitude;
+                let longitude = position.coords.longitude;
+
+                // Store the coordinates in localStorage before redirecting
+                localStorage.setItem('userLocation', JSON.stringify({
+                    latitude: latitude,
+                    longitude: longitude
+                }));
+
+                window.location.href = `./moreEdite.html?id=${id}`;
+
+            } catch (err) {
+                console.error(`Error getting location: ${err.message}`);
+                // Proceed without location data
+                window.location.href = `./moreEdite.html?id=${id}`;
+            }
+        }
+    </script>
+</body>
+</html>

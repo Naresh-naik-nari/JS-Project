@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .container:hover {
+            transform: scale(1.1);
+            transition: 0.5s ease;
+        }
+
+        .item img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .item p {
+            font-size: 1.1em;
+            margin: 8px 0;
+        }
+
+        .back-button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Loader Styles */
+        .loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            aspect-ratio: 2;
+            --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+            background:
+                var(--_g) 0% 50%,
+                var(--_g) 50% 50%,
+                var(--_g) 100% 50%;
+            background-size: calc(100%/3) 50%;
+            animation: l3 1s infinite linear;
+            display: none;
+        }
+
+        @keyframes l3 {
+            20% {
+                background-position: 0% 0%, 50% 50%, 100% 50%
+            }
+
+            40% {
+                background-position: 0% 100%, 50% 0%, 100% 50%
+            }
+
+            60% {
+                background-position: 0% 50%, 50% 100%, 100% 0%
+            }
+
+            80% {
+                background-position: 0% 50%, 50% 50%, 100% 100%
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container"></div>
+    <div class="loader" id="loader"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let urlsearchparams = new URLSearchParams(location.search);
+            let id = urlsearchparams.get("id");
+            console.log("Job ID:", id);
+            let loader = document.getElementById("loader");
+
+            // API endpoint - using template literal to insert the id
+            const url = `https://sable-aware-polish.glitch.me/jobs/?id=${id}`;
+            
+            // Initialize the page
+            getData();
+
+            async function getData() {
+                loader.style.display = 'block';
+
+                try {
+                    let res = await fetch(url);
+
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+
+                    let data = await res.json();
+                    console.log("API Response:", data);
+                    
+                    // Check if data is an array or object and handle accordingly
+                    let jobData;
+                    if (Array.isArray(data)) {
+                        jobData = data.find(obj => obj.id == id);
+                    } else if (data.jobs) {
+                        jobData = data.jobs.find(obj => obj.id == id);
+                    } else {
+                        jobData = data; // assuming the API returns the job directly
+                    }
+
+                    console.log("Filtered Data:", jobData);
+                    
+                    if (!jobData) {
+                        displayNotFound();
+                    } else {
+                        displayData(jobData);
+                    }
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                    displayError();
+                } finally {
+                    loader.style.display = 'none';
+                }
+            }
+
+            function displayData(job) {
+                let container = document.getElementById("container");
+                container.innerHTML = '';
+
+                let item = document.createElement("div");
+                item.className = "item";
+                
+                // Destructure the job object with default values in case some fields are missing
+                let { 
+                    title = 'Not specified', 
+                    category = 'Not specified', 
+                    company = 'Not specified', 
+                    description = 'No description available', 
+                    location = 'Not specified', 
+                    skills = 'Not specified', 
+                    salary = 'Not specified', 
+                    experience = 'Not specified' 
+                } = job;
+                
+                item.innerHTML = `
+                    <p><strong>Title:</strong> ${title}</p>
+                    <p><strong>Category:</strong> ${category}</p>
+                    <p><strong>Company:</strong> ${company}</p>
+                    <p><strong>Description:</strong> ${description}</p>
+                    <p><strong>Location:</strong> ${location}</p>
+                    <p><strong>Skills:</strong> ${Array.isArray(skills) ? skills.join(', ') : skills}</p>
+                    <p><strong>Salary:</strong> ${salary}</p>
+                    <p><strong>Experience:</strong> ${experience}</p>
+                    <button class="back-button" onclick="goBack()">Back to Jobs</button>
+                `;
+                container.appendChild(item);
+            }
+
+            function displayNotFound() {
+                let container = document.getElementById("container");
+                container.innerHTML = '<p>Job not found</p><button class="back-button" onclick="goBack()">Back to Jobs</button>';
+            }
+
+            function displayError() {
+                let container = document.getElementById("container");
+                container.innerHTML = '<p>Error loading job details. Please try again later.</p><button class="back-button" onclick="goBack()">Back to Jobs</button>';
+            }
+
+            window.goBack = function() {
+                window.location.href = "Edite1.html";
+            }
+        });
+    </script>
+</body>
+
+</html>
